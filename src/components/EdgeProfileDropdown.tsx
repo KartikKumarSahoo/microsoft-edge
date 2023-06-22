@@ -2,8 +2,8 @@ import { List } from "@raycast/api";
 import { useEffect } from "react";
 import { useCachedPromise, useCachedState } from "@raycast/utils";
 import { existsSync, promises } from "fs";
-import { getLocalStatePath } from "../util";
-import { EdgeProfile } from "../interfaces";
+import { getLocalStatePath } from "../utils/pathUtils";
+import { EdgeProfile } from "../types/interfaces";
 import { DEFAULT_EDGE_PROFILE_ID, EDGE_PROFILE_KEY, EDGE_PROFILES_KEY } from "../constants";
 
 interface Props {

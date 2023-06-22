@@ -1,7 +1,7 @@
 import * as fs from "fs";
 import { useSQL } from "@raycast/utils";
-import { HistoryEntry, SearchResult } from "../interfaces";
-import { getCollectionsDbPath } from "../util";
+import { HistoryEntry, SearchResult } from "../types/interfaces";
+import { getCollectionsDbPath } from "../utils/pathUtils";
 import { NoCollectionsError } from "../components/error/NoCollectionsError";
 
 const whereClauses = (tableTitle: string, terms: string[]) => {

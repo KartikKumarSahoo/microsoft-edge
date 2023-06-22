@@ -1,7 +1,7 @@
 import { ReactElement } from "react";
 import { Action, ActionPanel, closeMainWindow, getPreferenceValues, Icon } from "@raycast/api";
 import { openNewTab, setActiveTab } from "../actions";
-import { Preferences, SettingsProfileOpenBehaviour, Tab } from "../interfaces";
+import { Preferences, SettingsProfileOpenBehaviour, Tab } from "../types/interfaces";
 import { useCachedState } from "@raycast/utils";
 import { EDGE_PROFILE_KEY, DEFAULT_EDGE_PROFILE_ID } from "../constants";
 
@@ -17,7 +17,7 @@ function NewTabActions({ query }: { query?: string }): ReactElement {
 
   return (
     <ActionPanel title="New Tab">
-      <ActionPanel.Item
+      <Action
         onAction={() => openNewTab({ query, profileCurrent, openTabInProfile })}
         title={query ? `Search "${query}"` : "Open Empty Tab"}
       />
@@ -48,12 +48,9 @@ function HistoryItemActions({
 
   return (
     <ActionPanel title={title}>
-      <ActionPanel.Item
-        onAction={() => openNewTab({ url, profileOriginal, profileCurrent, openTabInProfile })}
-        title={"Open"}
-      />
+      <Action onAction={() => openNewTab({ url, profileOriginal, profileCurrent, openTabInProfile })} title={"Open"} />
       <ActionPanel.Section title={"Open in profile"}>
-        <ActionPanel.Item
+        <Action
           onAction={() =>
             openNewTab({
               url,
@@ -64,7 +61,7 @@ function HistoryItemActions({
           }
           title={"Open in current profile"}
         />
-        <ActionPanel.Item
+        <Action
           onAction={() =>
             openNewTab({
               url,
@@ -87,5 +84,5 @@ function GoToTab(props: { tab: Tab }) {
     await closeMainWindow();
   }
 
-  return <ActionPanel.Item title="Open Tab" icon={{ source: Icon.Eye }} onAction={handleAction} />;
+  return <Action title="Open Tab" icon={{ source: Icon.Eye }} onAction={handleAction} />;
 }

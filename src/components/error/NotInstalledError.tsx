@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { ActionPanel, Detail, showToast, Toast } from "@raycast/api";
+import { Action, ActionPanel, Detail, showToast, Toast } from "@raycast/api";
 import { execSync } from "child_process";
-import { DEFAULT_ERROR_TITLE, DownloadText } from "../../constants";
+import { DEFAULT_ERROR_TITLE } from "../../constants";
 import { cpus } from "os";
 import { join } from "path";
-import { ExecError } from "../../interfaces";
+import { ExecError } from "../../types/interfaces";
+import { getDownloadText } from "../../utils/messageUtils";
 
 export const brewPrefix: string = (() => {
   try {
@@ -39,7 +40,7 @@ export function NotInstalledError() {
       actions={
         <ActionPanel>
           {isLoading && (
-            <ActionPanel.Item
+            <Action
               title="Install with Homebrew"
               onAction={async () => {
                 if (!isLoading) return;
@@ -65,7 +66,7 @@ export function NotInstalledError() {
           )}
         </ActionPanel>
       }
-      markdown={DownloadText}
+      markdown={getDownloadText()}
     />
   );
 }

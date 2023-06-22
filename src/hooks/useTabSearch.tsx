@@ -1,9 +1,9 @@
 import { ReactNode, useCallback, useEffect, useState } from "react";
 import { getOpenTabs } from "../actions";
-import { Preferences, SearchResult, Tab } from "../interfaces";
+import { Preferences, SearchResult, Tab } from "../types/interfaces";
 import { getPreferenceValues } from "@raycast/api";
-import { NOT_INSTALLED_MESSAGE } from "../constants";
 import { NotInstalledError, UnknownError } from "../components";
+import { geNotInstalledMessage } from "../utils/messageUtils";
 
 export function useTabSearch(query?: string): SearchResult<Tab> {
   const { useOriginalFavicon } = getPreferenceValues<Preferences>();
@@ -29,7 +29,7 @@ export function useTabSearch(query?: string): SearchResult<Tab> {
     getTabs()
       .then(() => setIsLoading(false))
       .catch((e) => {
-        if (e.message === NOT_INSTALLED_MESSAGE) {
+        if (e.message === geNotInstalledMessage()) {
           setErrorView(<NotInstalledError />);
         } else {
           setErrorView(<UnknownError />);

@@ -1,6 +1,6 @@
 import { Icon, List } from "@raycast/api";
 import { useState, ReactElement } from "react";
-import { GroupedEntries, HistoryEntry } from "./interfaces";
+import { GroupedEntries, HistoryEntry } from "./types/interfaces";
 import { EdgeListItems } from "./components";
 import EdgeProfileDropDown from "./components/EdgeProfileDropdown";
 import { useCachedState } from "@raycast/utils";

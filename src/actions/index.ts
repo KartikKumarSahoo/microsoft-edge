@@ -1,7 +1,8 @@
 import { runAppleScript } from "run-applescript";
-import { closeMainWindow, popToRoot } from "@raycast/api";
-import { SettingsProfileOpenBehaviour, Tab } from "../interfaces";
-import { NOT_INSTALLED_MESSAGE, applicationName } from "../constants";
+import { PopToRootType, closeMainWindow, popToRoot } from "@raycast/api";
+import { SettingsProfileOpenBehaviour, Tab } from "../types/interfaces";
+import { getApplicationName } from "../utils/appUtils";
+import { geNotInstalledMessage } from "../utils/messageUtils";
 
 export async function getOpenTabs(useOriginalFavicon: boolean): Promise<Tab[]> {
   const faviconFormula = useOriginalFavicon
@@ -13,7 +14,7 @@ export async function getOpenTabs(useOriginalFavicon: boolean): Promise<Tab[]> {
 
   const openTabs = await runAppleScript(`
       set _output to ""
-      tell application "${applicationName}"
+      tell application "${getApplicationName()}"
         set _window_index to 1
         repeat with w in windows
           set _tab_index to 1
@@ -21,7 +22,11 @@ export async function getOpenTabs(useOriginalFavicon: boolean): Promise<Tab[]> {
             set _title to get title of t
             set _url to get URL of t
             set _favicon to ${faviconFormula}
-            set _output to (_output & _title & "${Tab.TAB_CONTENTS_SEPARATOR}" & _url & "${Tab.TAB_CONTENTS_SEPARATOR}" & _favicon & "${Tab.TAB_CONTENTS_SEPARATOR}" & _window_index & "${Tab.TAB_CONTENTS_SEPARATOR}" & _tab_index & "\\n")
+            set _output to (_output & _title & "${Tab.TAB_CONTENTS_SEPARATOR}" & _url & "${
+    Tab.TAB_CONTENTS_SEPARATOR
+  }" & _favicon & "${Tab.TAB_CONTENTS_SEPARATOR}" & _window_index & "${
+    Tab.TAB_CONTENTS_SEPARATOR
+  }" & _tab_index & "\\n")
             set _tab_index to _tab_index + 1
           end repeat
           set _window_index to _window_index + 1
@@ -53,7 +58,10 @@ export async function openNewTab({
   setTimeout(() => {
     popToRoot({ clearSearchBar: true });
   }, 3000);
-  await Promise.all([closeMainWindow({ clearRootSearch: true }), checkAppInstalled()]);
+  await Promise.all([
+    closeMainWindow({ clearRootSearch: true, popToRootType: PopToRootType.Suspended }),
+    checkAppInstalled(),
+  ]);
 
   let script = "";
 
@@ -61,14 +69,14 @@ export async function openNewTab({
     `
     set profile to quoted form of "${profile}"
     set link to quoted form of "${url ? url : "about:blank"}"
-    do shell script "open -na '${applicationName}' --args --profile-directory=" & profile & " " & link
+    do shell script "open -na '${getApplicationName()}' --args --profile-directory=" & profile & " " & link
   `;
 
   switch (openTabInProfile) {
     case SettingsProfileOpenBehaviour.Default:
       script =
         `
-    tell application "${applicationName}"
+    tell application "${getApplicationName()}"
       activate
       tell window 1
           set newTab to make new tab ` +
@@ -97,7 +105,7 @@ export async function openNewTab({
 
 export async function setActiveTab(tab: Tab): Promise<void> {
   await runAppleScript(`
-    tell application "${applicationName}"
+    tell application "${getApplicationName()}"
       activate
       set index of window (${tab.windowsIndex} as number) to (${tab.windowsIndex} as number)
       set active tab index of window (${tab.windowsIndex} as number) to (${tab.tabIndex} as number)
@@ -107,14 +115,14 @@ export async function setActiveTab(tab: Tab): Promise<void> {
 }
 const checkAppInstalled = async () => {
   const appInstalled = await runAppleScript(`
-set isInstalled to false
-try
-    do shell script "osascript -e 'exists application \\"${applicationName}\\"'"
-    set isInstalled to true
-end try
+    set isInstalled to false
+    try
+        do shell script "osascript -e 'exists application \\"${getApplicationName()}\\"'"
+        set isInstalled to true
+    end try
 
-return isInstalled`);
+    return isInstalled`);
   if (appInstalled === "false") {
-    throw new Error(NOT_INSTALLED_MESSAGE);
+    throw new Error(geNotInstalledMessage());
   }
 };

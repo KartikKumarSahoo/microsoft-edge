@@ -4,7 +4,7 @@ import { useHistorySearch } from "./hooks/useHistorySearch";
 import { EdgeActions, EdgeListItems } from "./components";
 import { useTabSearch } from "./hooks/useTabSearch";
 import { useCachedState } from "@raycast/utils";
-import { EdgeProfile, HistoryEntry, Preferences, SearchResult } from "./interfaces";
+import { EdgeProfile, HistoryEntry, Preferences, SearchResult } from "./types/interfaces";
 import EdgeProfileDropdown from "./components/EdgeProfileDropdown";
 import { EDGE_PROFILE_KEY, EDGE_PROFILES_KEY, DEFAULT_EDGE_PROFILE_ID } from "./constants";
 

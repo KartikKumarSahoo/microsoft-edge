@@ -1,6 +1,6 @@
 import { getPreferenceValues, List } from "@raycast/api";
 import { useEffect, useState } from "react";
-import { Preferences, Tab } from "./interfaces";
+import { Preferences, Tab } from "./types/interfaces";
 import { getOpenTabs } from "./actions";
 import { EdgeListItems } from "./components";
 

@@ -1,4 +1,4 @@
-import { HistoryEntry, Tab } from "../interfaces";
+import { HistoryEntry, Tab } from "../types/interfaces";
 import { ReactElement } from "react";
 import { getFavicon } from "@raycast/utils";
 import { List } from "@raycast/api";
