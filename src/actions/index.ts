@@ -4,12 +4,7 @@ import { SettingsProfileOpenBehaviour, Tab } from "../types/interfaces";
 import { getApplicationName } from "../utils/appUtils";
 import { geNotInstalledMessage } from "../utils/messageUtils";
 
-export async function getOpenTabs(useOriginalFavicon: boolean): Promise<Tab[]> {
-  const faviconFormula = useOriginalFavicon
-    ? `execute of tab _tab_index of window _window_index javascript ¬
-                    "document.head.querySelector('link[rel~=icon]').href;"`
-    : '""';
-
+export async function getOpenTabs(): Promise<Tab[]> {
   await validateAppIsInstalled();
 
   const openTabs = await runAppleScript(`
@@ -21,7 +16,7 @@ export async function getOpenTabs(useOriginalFavicon: boolean): Promise<Tab[]> {
           repeat with t in tabs of w
             set _title to get title of t
             set _url to get URL of t
-            set _favicon to ${faviconFormula}
+            set _favicon to ""
             set _output to (_output & _title & "${Tab.TAB_CONTENTS_SEPARATOR}" & _url & "${
     Tab.TAB_CONTENTS_SEPARATOR
   }" & _favicon & "${Tab.TAB_CONTENTS_SEPARATOR}" & _window_index & "${

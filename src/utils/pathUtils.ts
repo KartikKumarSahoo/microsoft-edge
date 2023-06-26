@@ -3,7 +3,9 @@ import { DEFAULT_EDGE_PROFILE_ID } from "../constants";
 import { getApplicationName } from "./appUtils";
 
 const PATH_PREFIX = "Application Support";
+
 export const getDefaultEdgeProfilePath = () => [PATH_PREFIX, getApplicationName()];
+
 export const getDefaultEdgeStatePath = () => [PATH_PREFIX, getApplicationName(), "Local State"];
 
 const userLibraryDirectoryPath = () => {

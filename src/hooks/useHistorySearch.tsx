@@ -2,9 +2,8 @@ import * as fs from "fs";
 import { useSQL } from "@raycast/utils";
 import { HistoryEntry, SearchResult } from "../types/interfaces";
 import { getHistoryDbPath } from "../utils/pathUtils";
-import { NotInstalledError } from "../components";
 import { useIsAppInstalled } from "./useIsAppInstalled";
-import { useEffect } from "react";
+import { NoHistoryError } from "../components/error/NoHistoryError";
 
 const whereClauses = (tableTitle: string, terms: string[]) => {
   return terms.map((t) => `${tableTitle}.title LIKE '%${t}%'`).join(" AND ");
@@ -34,7 +33,7 @@ export function useHistorySearch(profile: string, query?: string): SearchResult<
   }
 
   if (!fs.existsSync(dbPath)) {
-    return { isLoading: false, data: [], errorView: <NotInstalledError /> };
+    return { isLoading: false, data: [], errorView: <NoHistoryError /> };
   }
 
   const { data, isLoading, permissionView, revalidate } = useSQL<HistoryEntry>(dbPath, queries);

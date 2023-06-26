@@ -1,18 +1,16 @@
 import { ReactNode, useCallback, useEffect, useState } from "react";
 import { getOpenTabs } from "../actions";
-import { Preferences, SearchResult, Tab } from "../types/interfaces";
-import { getPreferenceValues } from "@raycast/api";
+import { SearchResult, Tab } from "../types/interfaces";
 import { NotInstalledError, UnknownError } from "../components";
 import { geNotInstalledMessage } from "../utils/messageUtils";
 
 export function useTabSearch(query?: string): SearchResult<Tab> {
-  const { useOriginalFavicon } = getPreferenceValues<Preferences>();
   const [data, setData] = useState<Tab[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [errorView, setErrorView] = useState<ReactNode | undefined>();
 
   const getTabs = useCallback(async () => {
-    let tabs = await getOpenTabs(useOriginalFavicon);
+    let tabs = await getOpenTabs();
 
     if (query) {
       tabs = tabs.filter(function (tab) {

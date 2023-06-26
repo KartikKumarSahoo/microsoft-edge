@@ -29,14 +29,14 @@ function HistoryItem({
   );
 }
 
-function TabListItem(props: { tab: Tab; useOriginalFavicon: boolean }) {
+function TabListItem(props: { tab: Tab }) {
   return (
     <List.Item
       title={props.tab.title}
       subtitle={props.tab.urlWithoutScheme()}
       keywords={[props.tab.urlWithoutScheme()]}
       actions={<EdgeActions.TabList tab={props.tab} />}
-      icon={props.useOriginalFavicon ? props.tab.favicon : props.tab.googleFavicon()}
+      icon={props.tab.googleFavicon()}
     />
   );
 }

@@ -6,7 +6,7 @@ import { cpus } from "os";
 import { join } from "path";
 import { ExecError } from "../../types/interfaces";
 import { getDownloadText } from "../../utils/messageUtils";
-import { getApplicationCaskName } from "../../utils/appUtils";
+import { isStableVersion } from "../../utils/appUtils";
 
 export const brewPrefix: string = (() => {
   try {
@@ -35,20 +35,21 @@ function execBrew(cask: string) {
 }
 
 export function NotInstalledError() {
-  const [isLoading, setIsLoading] = useState(true);
+  const [showAction, setShowAction] = useState(isStableVersion());
+
   return (
     <Detail
       actions={
         <ActionPanel>
-          {isLoading && (
+          {showAction && (
             <Action
               title="Install with Homebrew"
               onAction={async () => {
-                if (!isLoading) return;
+                if (!showAction) return;
                 const toast = new Toast({ style: Toast.Style.Animated, title: "Installing..." });
                 await toast.show();
                 try {
-                  execBrew(getApplicationCaskName());
+                  execBrew("microsoft-edge"); // No cask versions available for Edge Insider builds yet
                   await toast.hide();
                 } catch (e) {
                   await toast.hide();
@@ -61,7 +62,7 @@ export function NotInstalledError() {
                 toast.title = "Installed! Please go back and try again.";
                 toast.style = Toast.Style.Success;
                 await toast.show();
-                setIsLoading(false);
+                setShowAction(false);
               }}
             />
           )}

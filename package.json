@@ -58,15 +58,6 @@
       "default": false
     },
     {
-      "name": "useOriginalFavicon",
-      "title": "Fav icon",
-      "label": "Extract the favicon from every open tab",
-      "description": "Before enable this, you should enable 'Tools > Developer > Allow JavaScript from Apple Events' in every Microsoft Edge profile.",
-      "required": false,
-      "type": "checkbox",
-      "default": false
-    },
-    {
       "name": "openTabInProfile",
       "title": "Open Tab In Profile",
       "type": "dropdown",

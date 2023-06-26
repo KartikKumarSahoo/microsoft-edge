@@ -1,12 +1,12 @@
 import { useState } from "react";
-import { getPreferenceValues, Icon, List } from "@raycast/api";
+import { Icon, List } from "@raycast/api";
 import { useHistorySearch } from "./hooks/useHistorySearch";
 import { EdgeActions, EdgeListItems } from "./components";
 import { useTabSearch } from "./hooks/useTabSearch";
 import { useCachedState } from "@raycast/utils";
-import { EdgeProfile, HistoryEntry, Preferences, SearchResult } from "./types/interfaces";
+import { EdgeProfile, HistoryEntry, SearchResult } from "./types/interfaces";
 import EdgeProfileDropdown from "./components/EdgeProfileDropdown";
-import { EDGE_PROFILE_KEY, EDGE_PROFILES_KEY, DEFAULT_EDGE_PROFILE_ID } from "./constants";
+import { CURRENT_PROFILE_CACHE_KEY, ALL_PROFILES_CACHE_KEY, DEFAULT_EDGE_PROFILE_ID } from "./constants";
 
 type HistoryContainer = {
   profile: EdgeProfile;
@@ -22,11 +22,10 @@ function orderByLastVisited(targetId: string, container?: HistoryContainer[]): H
 
 export default function Command() {
   const [searchText, setSearchText] = useState<string>();
-  const [profiles] = useCachedState<EdgeProfile[]>(EDGE_PROFILES_KEY);
-  const [profile] = useCachedState(EDGE_PROFILE_KEY, DEFAULT_EDGE_PROFILE_ID);
+  const [profiles] = useCachedState<EdgeProfile[]>(ALL_PROFILES_CACHE_KEY);
+  const [profile] = useCachedState(CURRENT_PROFILE_CACHE_KEY, DEFAULT_EDGE_PROFILE_ID);
   const profileHistories = profiles?.map((p) => ({ ...useHistorySearch(p.id, searchText), profile: p }));
   const { data, isLoading, errorView } = useTabSearch();
-  const { useOriginalFavicon } = getPreferenceValues<Preferences>();
 
   if (errorView || profileHistories?.some((p) => p.errorView)) {
     const errorViewHistory = profileHistories?.find((p) => p.errorView)?.errorView;
@@ -48,7 +47,7 @@ export default function Command() {
       </List.Section>
       <List.Section key={"open-tabs"} title={"Open Tabs - All"}>
         {data?.map((tab) => (
-          <EdgeListItems.TabList key={tab.key()} tab={tab} useOriginalFavicon={useOriginalFavicon} />
+          <EdgeListItems.TabList key={tab.key()} tab={tab} />
         ))}
       </List.Section>
       {orderByLastVisited(profile, profileHistories).map((p) => (
