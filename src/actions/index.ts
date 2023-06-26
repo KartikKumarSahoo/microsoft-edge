@@ -10,7 +10,7 @@ export async function getOpenTabs(useOriginalFavicon: boolean): Promise<Tab[]> {
                     "document.head.querySelector('link[rel~=icon]').href;"`
     : '""';
 
-  await checkAppInstalled();
+  await validateAppIsInstalled();
 
   const openTabs = await runAppleScript(`
       set _output to ""
@@ -60,7 +60,7 @@ export async function openNewTab({
   }, 3000);
   await Promise.all([
     closeMainWindow({ clearRootSearch: true, popToRootType: PopToRootType.Suspended }),
-    checkAppInstalled(),
+    validateAppIsInstalled(),
   ]);
 
   let script = "";
@@ -75,21 +75,20 @@ export async function openNewTab({
   switch (openTabInProfile) {
     case SettingsProfileOpenBehaviour.Default:
       script =
-        `
-    tell application "${getApplicationName()}"
-      activate
-      tell window 1
-          set newTab to make new tab ` +
+        `tell application "${getApplicationName()}"
+            activate
+            tell window 1
+                set newTab to make new tab ` +
         (url
           ? `with properties {URL:"${url}"}`
           : query
           ? 'with properties {URL:"https://www.google.com/search?q=' + query + '"}'
           : "") +
         ` 
-      end tell
-    end tell
-    return true
-  `;
+            end tell
+          end tell
+        return true
+      `;
       break;
     case SettingsProfileOpenBehaviour.ProfileCurrent:
       script = getOpenInProfileCommand(profileCurrent);
@@ -113,7 +112,11 @@ export async function setActiveTab(tab: Tab): Promise<void> {
     return true
   `);
 }
-const checkAppInstalled = async () => {
+// TODO: Search tabs shows incorrect message when Dev build is not installed
+// TODO: Allow Beta and Canary builds support
+// TODO: Fix all https://github.com/raycast/extensions/issues?q=is%3Aissue+microsoft+edge+ issues
+// TODO: See if new features can be added to the extension like sidebar, vertical tabs, etc.
+export const validateAppIsInstalled = async () => {
   const appInstalled = await runAppleScript(`
     set isInstalled to false
     try

@@ -4,6 +4,7 @@ import { getBookmarksFilePath } from "../utils/pathUtils";
 import { ReactNode, useCallback, useEffect, useState } from "react";
 import { NoBookmarksError, NotInstalledError, UnknownError } from "../components";
 import { geNotInstalledMessage, getNoBookmarksMessage } from "../utils/messageUtils";
+import { validateAppIsInstalled } from "../actions";
 
 function extractBookmarkFromBookmarkDirectory(bookmarkDirectory: BookmarkDirectory): HistoryEntry[] {
   const bookmarks: HistoryEntry[] = [];
@@ -34,6 +35,9 @@ const extractBookmarks = (rawBookmarks: RawBookmarks): HistoryEntry[] => {
 };
 
 const getBookmarks = async (profile?: string): Promise<HistoryEntry[]> => {
+  // First check if the app is installed
+  await validateAppIsInstalled();
+
   const bookmarksFilePath = getBookmarksFilePath(profile);
   if (!existsSync(bookmarksFilePath)) {
     throw new Error(getNoBookmarksMessage());

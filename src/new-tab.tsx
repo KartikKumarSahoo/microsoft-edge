@@ -25,18 +25,18 @@ export default function Command() {
   const [profiles] = useCachedState<EdgeProfile[]>(EDGE_PROFILES_KEY);
   const [profile] = useCachedState(EDGE_PROFILE_KEY, DEFAULT_EDGE_PROFILE_ID);
   const profileHistories = profiles?.map((p) => ({ ...useHistorySearch(p.id, searchText), profile: p }));
-  const { data: dataTab, isLoading: isLoadingTab, errorView: errorViewTab } = useTabSearch();
+  const { data, isLoading, errorView } = useTabSearch();
   const { useOriginalFavicon } = getPreferenceValues<Preferences>();
 
-  if (errorViewTab || profileHistories?.some((p) => p.errorView)) {
+  if (errorView || profileHistories?.some((p) => p.errorView)) {
     const errorViewHistory = profileHistories?.find((p) => p.errorView)?.errorView;
-    return errorViewTab || errorViewHistory;
+    return errorView || errorViewHistory;
   }
 
   return (
     <List
       onSearchTextChange={setSearchText}
-      isLoading={isLoadingTab || profileHistories?.find((p) => p.isLoading)?.isLoading}
+      isLoading={isLoading || profileHistories?.find((p) => p.isLoading)?.isLoading}
       searchBarAccessory={<EdgeProfileDropdown />}
     >
       <List.Section key={"new-tab"} title={"New Tab"}>
@@ -47,7 +47,7 @@ export default function Command() {
         />
       </List.Section>
       <List.Section key={"open-tabs"} title={"Open Tabs - All"}>
-        {dataTab?.map((tab) => (
+        {data?.map((tab) => (
           <EdgeListItems.TabList key={tab.key()} tab={tab} useOriginalFavicon={useOriginalFavicon} />
         ))}
       </List.Section>

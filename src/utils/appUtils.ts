@@ -22,6 +22,20 @@ export function getApplicationName(applicationType: ApplicationType = getApplica
   }
 }
 
+export function getApplicationCaskName(applicationType: ApplicationType = getApplicationType()) {
+  switch (applicationType) {
+    case ApplicationType.EdgeDev:
+      return "microsoft-edge-dev";
+    case ApplicationType.EdgeBeta:
+      return "microsoft-edge-beta";
+    case ApplicationType.EdgeCanary:
+      return "microsoft-edge-canary";
+    case ApplicationType.EdgeStable:
+    default:
+      return "microsoft-edge";
+  }
+}
+
 export function getApplicationImage(applicationType: ApplicationType = getApplicationType()) {
   switch (applicationType) {
     case ApplicationType.EdgeDev:

@@ -6,6 +6,7 @@ import { cpus } from "os";
 import { join } from "path";
 import { ExecError } from "../../types/interfaces";
 import { getDownloadText } from "../../utils/messageUtils";
+import { getApplicationCaskName } from "../../utils/appUtils";
 
 export const brewPrefix: string = (() => {
   try {
@@ -47,7 +48,7 @@ export function NotInstalledError() {
                 const toast = new Toast({ style: Toast.Style.Animated, title: "Installing..." });
                 await toast.show();
                 try {
-                  execBrew("microsoft-edge");
+                  execBrew(getApplicationCaskName());
                   await toast.hide();
                 } catch (e) {
                   await toast.hide();
