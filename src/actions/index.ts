@@ -3,9 +3,13 @@ import { PopToRootType, closeMainWindow, popToRoot } from "@raycast/api";
 import { SettingsProfileOpenBehaviour, Tab } from "../types/interfaces";
 import { getApplicationName } from "../utils/appUtils";
 import { geNotInstalledMessage } from "../utils/messageUtils";
+import { DEFAULT_PROFILE_ID } from "../constants";
 
-export async function getOpenTabs(): Promise<Tab[]> {
+export async function getOpenTabs(profile: string = DEFAULT_PROFILE_ID): Promise<Tab[]> {
   await validateAppIsInstalled();
+  // TODO: This doesn't honor the current profile selection
+  // Don't know how to get the current profile from using AppleScript
+  console.log("Profile: ", profile);
 
   const openTabs = await runAppleScript(`
       set _output to ""
@@ -108,9 +112,13 @@ export async function setActiveTab(tab: Tab): Promise<void> {
   `);
 }
 // TODO: Search tabs shows incorrect message when Dev build is not installed
+// TODO: Multiple profiles cache creates problem after new browser installation which has one default profile
+// TODO: New Tab command revalidate doesn't work when profile is changed
+// TODO: Search Tab command doesn't show profile selection
 // TODO: Allow Beta and Canary builds support
 // TODO: Fix all https://github.com/raycast/extensions/issues?q=is%3Aissue+microsoft+edge+ issues
 // TODO: See if new features can be added to the extension like sidebar, vertical tabs, etc.
+// TODO: Remove console.log statements
 export const validateAppIsInstalled = async () => {
   const appInstalled = await runAppleScript(`
     set isInstalled to false

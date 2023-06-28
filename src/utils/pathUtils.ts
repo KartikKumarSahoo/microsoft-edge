@@ -1,5 +1,5 @@
 import path from "path";
-import { DEFAULT_EDGE_PROFILE_ID } from "../constants";
+import { DEFAULT_PROFILE_ID } from "../constants";
 import { getApplicationName } from "./appUtils";
 
 const PATH_PREFIX = "Application Support";
@@ -17,23 +17,21 @@ const userLibraryDirectoryPath = () => {
 };
 
 export const getHistoryDbPath = (profile?: string) =>
-  path.join(userLibraryDirectoryPath(), ...getDefaultEdgeProfilePath(), profile ?? DEFAULT_EDGE_PROFILE_ID, "History");
+  path.join(userLibraryDirectoryPath(), ...getDefaultEdgeProfilePath(), profile ?? DEFAULT_PROFILE_ID, "History");
 
+/**
+ * @returns Path to the Local State file which contains all the profile information
+ */
 export const getLocalStatePath = () => path.join(userLibraryDirectoryPath(), ...getDefaultEdgeStatePath());
 
 export const getBookmarksFilePath = (profile?: string) =>
-  path.join(
-    userLibraryDirectoryPath(),
-    ...getDefaultEdgeProfilePath(),
-    profile ?? DEFAULT_EDGE_PROFILE_ID,
-    "Bookmarks"
-  );
+  path.join(userLibraryDirectoryPath(), ...getDefaultEdgeProfilePath(), profile ?? DEFAULT_PROFILE_ID, "Bookmarks");
 
 export const getCollectionsDbPath = (profile?: string) =>
   path.join(
     userLibraryDirectoryPath(),
     ...getDefaultEdgeProfilePath(),
-    profile ?? DEFAULT_EDGE_PROFILE_ID,
+    profile ?? DEFAULT_PROFILE_ID,
     "Collections",
     "collectionsSQLite"
   );

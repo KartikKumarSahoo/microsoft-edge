@@ -6,7 +6,7 @@ import { useTabSearch } from "./hooks/useTabSearch";
 import { useCachedState } from "@raycast/utils";
 import { EdgeProfile, HistoryEntry, SearchResult } from "./types/interfaces";
 import EdgeProfileDropdown from "./components/EdgeProfileDropdown";
-import { CURRENT_PROFILE_CACHE_KEY, ALL_PROFILES_CACHE_KEY, DEFAULT_EDGE_PROFILE_ID } from "./constants";
+import { CURRENT_PROFILE_CACHE_KEY, ALL_PROFILES_CACHE_KEY, DEFAULT_PROFILE_ID } from "./constants";
 
 type HistoryContainer = {
   profile: EdgeProfile;
@@ -23,9 +23,9 @@ function orderByLastVisited(targetId: string, container?: HistoryContainer[]): H
 export default function Command() {
   const [searchText, setSearchText] = useState<string>();
   const [profiles] = useCachedState<EdgeProfile[]>(ALL_PROFILES_CACHE_KEY);
-  const [profile] = useCachedState(CURRENT_PROFILE_CACHE_KEY, DEFAULT_EDGE_PROFILE_ID);
+  const [profile] = useCachedState(CURRENT_PROFILE_CACHE_KEY, DEFAULT_PROFILE_ID);
   const profileHistories = profiles?.map((p) => ({ ...useHistorySearch(p.id, searchText), profile: p }));
-  const { data, isLoading, errorView } = useTabSearch();
+  const { data, isLoading, errorView, revalidate } = useTabSearch();
 
   if (errorView || profileHistories?.some((p) => p.errorView)) {
     const errorViewHistory = profileHistories?.find((p) => p.errorView)?.errorView;
@@ -36,7 +36,7 @@ export default function Command() {
     <List
       onSearchTextChange={setSearchText}
       isLoading={isLoading || profileHistories?.find((p) => p.isLoading)?.isLoading}
-      searchBarAccessory={<EdgeProfileDropdown />}
+      searchBarAccessory={<EdgeProfileDropdown onProfileSelected={revalidate} />}
     >
       <List.Section key={"new-tab"} title={"New Tab"}>
         <List.Item

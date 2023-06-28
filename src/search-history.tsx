@@ -5,7 +5,7 @@ import { GroupedEntries, HistoryEntry } from "./types/interfaces";
 import { EdgeListItems } from "./components";
 import EdgeProfileDropDown from "./components/EdgeProfileDropdown";
 import { useCachedState } from "@raycast/utils";
-import { CURRENT_PROFILE_CACHE_KEY, DEFAULT_EDGE_PROFILE_ID } from "./constants";
+import { CURRENT_PROFILE_CACHE_KEY, DEFAULT_PROFILE_ID } from "./constants";
 
 const groupEntries = (allEntries?: HistoryEntry[]): GroupedEntries =>
   allEntries
@@ -25,7 +25,7 @@ const groupEntries = (allEntries?: HistoryEntry[]): GroupedEntries =>
 
 export default function Command(): ReactElement {
   const [searchText, setSearchText] = useState<string>();
-  const [profile] = useCachedState<string>(CURRENT_PROFILE_CACHE_KEY, DEFAULT_EDGE_PROFILE_ID);
+  const [profile] = useCachedState<string>(CURRENT_PROFILE_CACHE_KEY, DEFAULT_PROFILE_ID);
   const { data, isLoading, errorView, revalidate } = useHistorySearch(profile, searchText);
 
   if (errorView) {
