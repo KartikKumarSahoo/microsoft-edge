@@ -45,7 +45,7 @@ export async function openNewTab({
   url,
   query,
   profileCurrent,
-  profileOriginal,
+  profileOriginal = DEFAULT_PROFILE_ID,
   openTabInProfile,
 }: {
   url?: string;
@@ -64,37 +64,21 @@ export async function openNewTab({
 
   let script = "";
 
-  const getOpenInProfileCommand = (profile: string) =>
-    `
+  const getOpenInProfileCommand = (profile: string) => `
     set profile to quoted form of "${profile}"
-    set link to quoted form of "${url ? url : "about:blank"}"
+    set link to quoted form of "${url ? url : query ? "https://google.com/search?q=" + query : "about:blank"}"
     do shell script "open -na '${getApplicationName()}' --args --profile-directory=" & profile & " " & link
   `;
 
   switch (openTabInProfile) {
     case SettingsProfileOpenBehaviour.Default:
-      script =
-        `tell application "${getApplicationName()}"
-            activate
-            tell window 1
-                set newTab to make new tab ` +
-        (url
-          ? `with properties {URL:"${url}"}`
-          : query
-          ? 'with properties {URL:"https://www.google.com/search?q=' + query + '"}'
-          : "") +
-        ` 
-            end tell
-          end tell
-        return true
-      `;
+      script = getOpenInProfileCommand(DEFAULT_PROFILE_ID);
       break;
     case SettingsProfileOpenBehaviour.ProfileCurrent:
       script = getOpenInProfileCommand(profileCurrent);
       break;
     case SettingsProfileOpenBehaviour.ProfileOriginal:
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      script = getOpenInProfileCommand(profileOriginal!);
+      script = getOpenInProfileCommand(profileOriginal);
       break;
   }
 
@@ -105,10 +89,38 @@ export async function setActiveTab(tab: Tab): Promise<void> {
   await runAppleScript(`
     tell application "${getApplicationName()}"
       activate
-      set index of window (${tab.windowsIndex} as number) to (${tab.windowsIndex} as number)
-      set active tab index of window (${tab.windowsIndex} as number) to (${tab.tabIndex} as number)
+
+      -- this iteration finds the window that has the target tab and brings that to front
+      set _targetURL to "${tab.url}"
+      repeat with w in windows
+        set _tab_index to 1
+        repeat with t in tabs of w
+          if URL of t is equal to _targetURL then
+            set index of w to 1
+            exit repeat
+          end if
+          set _tab_index to _tab_index + 1
+        end repeat
+        if URL of active tab of w is equal to _targetURL then
+          exit repeat
+        end if
+      end repeat
+
+      -- this iteration activates the target Tab in the active window
+      repeat with w in windows
+        set _tab_index to 1
+        repeat with t in tabs of w
+          if URL of t is equal to _targetURL then
+            set active tab index of w to _tab_index
+            exit repeat
+          end if
+          set _tab_index to _tab_index + 1
+        end repeat
+        if URL of active tab of w is equal to _targetURL then
+          exit repeat
+        end if
+      end repeat
     end tell
-    return true
   `);
 }
 // TODO: Search tabs shows incorrect message when Dev build is not installed
@@ -128,6 +140,7 @@ export const validateAppIsInstalled = async () => {
     end try
 
     return isInstalled`);
+
   if (appInstalled === "false") {
     throw new Error(geNotInstalledMessage());
   }
