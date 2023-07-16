@@ -3,7 +3,8 @@ import { Action, ActionPanel, closeMainWindow, getPreferenceValues, Icon } from 
 import { openNewTab, setActiveTab } from "../actions";
 import { Preferences, SettingsProfileOpenBehaviour, Tab } from "../types/interfaces";
 import { useCachedState } from "@raycast/utils";
-import { CURRENT_PROFILE_CACHE_KEY, DEFAULT_PROFILE_ID } from "../constants";
+import { DEFAULT_PROFILE_ID } from "../constants";
+import { getCurrentProfileCacheKey } from "../utils/appUtils";
 
 export class EdgeActions {
   public static NewTab = NewTabActions;
@@ -13,7 +14,7 @@ export class EdgeActions {
 
 function NewTabActions({ query }: { query?: string }): ReactElement {
   const { openTabInProfile } = getPreferenceValues<Preferences>();
-  const [profileCurrent] = useCachedState(CURRENT_PROFILE_CACHE_KEY, DEFAULT_PROFILE_ID);
+  const [profileCurrent] = useCachedState(getCurrentProfileCacheKey(), DEFAULT_PROFILE_ID);
 
   return (
     <ActionPanel title="New Tab">
@@ -44,7 +45,7 @@ function HistoryItemActions({
   profile: string;
 }): ReactElement {
   const { openTabInProfile } = getPreferenceValues<Preferences>();
-  const [profileCurrent] = useCachedState(CURRENT_PROFILE_CACHE_KEY, DEFAULT_PROFILE_ID);
+  const [profileCurrent] = useCachedState(getCurrentProfileCacheKey(), DEFAULT_PROFILE_ID);
 
   return (
     <ActionPanel title={title}>

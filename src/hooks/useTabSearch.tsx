@@ -4,8 +4,8 @@ import { SearchResult, Tab } from "../types/interfaces";
 import { NotInstalledError, UnknownError } from "../components";
 import { geNotInstalledMessage } from "../utils/messageUtils";
 
-const getTabs = async (profile?: string, query?: string) => {
-  let tabs = await getOpenTabs(profile);
+const getTabs = async (_profile?: string, query?: string) => {
+  let tabs = await getOpenTabs();
 
   if (query) {
     tabs = tabs.filter(function (tab) {

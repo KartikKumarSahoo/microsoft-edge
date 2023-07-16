@@ -4,21 +4,19 @@ import { useCachedPromise, useCachedState } from "@raycast/utils";
 import { existsSync, promises } from "fs";
 import { getLocalStatePath } from "../utils/pathUtils";
 import { EdgeProfile } from "../types/interfaces";
-import {
-  DEFAULT_PROFILE_ID,
-  CURRENT_PROFILE_CACHE_KEY,
-  ALL_PROFILES_CACHE_KEY,
-  DUMMY_PROFILE_NAME,
-} from "../constants";
+import { DEFAULT_PROFILE_ID, ALL_PROFILES_CACHE_KEY, DUMMY_PROFILE_NAME } from "../constants";
+import { getCurrentProfileCacheKey } from "../utils/appUtils";
 
 interface Props {
   onProfileSelected?: (profile: string) => void;
 }
 
+const DEFAULT_PROFILE = { name: DUMMY_PROFILE_NAME, id: DEFAULT_PROFILE_ID };
+
 async function loadEdgeProfiles(): Promise<EdgeProfile[]> {
   const path = getLocalStatePath();
   if (!existsSync(path)) {
-    return [{ name: DUMMY_PROFILE_NAME, id: DEFAULT_PROFILE_ID }];
+    return [DEFAULT_PROFILE];
   }
 
   const edgeState = await promises.readFile(path, "utf-8");
@@ -33,11 +31,8 @@ async function loadEdgeProfiles(): Promise<EdgeProfile[]> {
 }
 
 export default function EdgeProfileDropDown({ onProfileSelected }: Props) {
-  // TODO: Add a way to refresh the profiles when build changes in preferences
-  const [selectedProfile, setSelectedProfile] = useCachedState<string>(CURRENT_PROFILE_CACHE_KEY, DEFAULT_PROFILE_ID);
-  const [profiles, setProfiles] = useCachedState<EdgeProfile[]>(ALL_PROFILES_CACHE_KEY, [
-    { name: DUMMY_PROFILE_NAME, id: DEFAULT_PROFILE_ID },
-  ]);
+  const [selectedProfile, setSelectedProfile] = useCachedState<string>(getCurrentProfileCacheKey(), DEFAULT_PROFILE_ID);
+  const [profiles, setProfiles] = useCachedState<EdgeProfile[]>(ALL_PROFILES_CACHE_KEY, [DEFAULT_PROFILE]);
   const { data: loadedProfiles } = useCachedPromise(loadEdgeProfiles);
 
   useEffect(() => {

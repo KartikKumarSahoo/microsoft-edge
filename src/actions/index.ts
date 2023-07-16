@@ -5,7 +5,7 @@ import { getApplicationName } from "../utils/appUtils";
 import { geNotInstalledMessage } from "../utils/messageUtils";
 import { DEFAULT_PROFILE_ID } from "../constants";
 
-export async function getOpenTabs(profile: string = DEFAULT_PROFILE_ID): Promise<Tab[]> {
+export async function getOpenTabs(): Promise<Tab[]> {
   await validateAppIsInstalled();
 
   const openTabs = await runAppleScript(`

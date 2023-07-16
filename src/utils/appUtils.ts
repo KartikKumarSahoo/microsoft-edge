@@ -49,3 +49,8 @@ export function getApplicationImage(applicationType: ApplicationType = getApplic
       return "edge-stable.png";
   }
 }
+
+// This depends on the buildChoice preference
+export function getCurrentProfileCacheKey() {
+  return `current-profile-${getApplicationType()}`;
+}
