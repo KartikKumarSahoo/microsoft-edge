@@ -3,9 +3,19 @@ import { getPreferenceValues } from "@raycast/api";
 import { Preferences } from "../types/interfaces";
 
 const { useDev } = getPreferenceValues<Preferences>();
+const { buildChoice } = getPreferenceValues<Preferences>();
 
 export function getApplicationType() {
-  return useDev ? ApplicationType.EdgeDev : ApplicationType.EdgeStable;
+  switch (buildChoice) {
+    case "dev":
+      return ApplicationType.EdgeDev;
+    case "canary":
+      return ApplicationType.EdgeCanary;
+    case "beta":
+      return ApplicationType.EdgeBeta;
+    default:
+      return useDev ? ApplicationType.EdgeDev : ApplicationType.EdgeStable;
+  }
 }
 
 export function getApplicationName(applicationType: ApplicationType = getApplicationType()) {

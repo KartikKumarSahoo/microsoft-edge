@@ -33,6 +33,7 @@ async function loadEdgeProfiles(): Promise<EdgeProfile[]> {
 }
 
 export default function EdgeProfileDropDown({ onProfileSelected }: Props) {
+  // TODO: Add a way to refresh the profiles when build changes in preferences
   const [selectedProfile, setSelectedProfile] = useCachedState<string>(CURRENT_PROFILE_CACHE_KEY, DEFAULT_PROFILE_ID);
   const [profiles, setProfiles] = useCachedState<EdgeProfile[]>(ALL_PROFILES_CACHE_KEY, [
     { name: DUMMY_PROFILE_NAME, id: DEFAULT_PROFILE_ID },
