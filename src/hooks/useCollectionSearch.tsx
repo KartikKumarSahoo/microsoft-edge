@@ -29,7 +29,6 @@ export function useCollectionSearch(profile: string, query?: string): SearchResu
   }
 
   if (!fs.existsSync(dbPath)) {
-    console.log("No collections", dbPath);
     return { isLoading: false, data: [], errorView: <NoCollectionsError /> };
   }
 

@@ -37,7 +37,6 @@ export default function EdgeProfileDropDown({ onProfileSelected }: Props) {
 
   useEffect(() => {
     if (loadedProfiles) {
-      console.log("Loaded profiles", loadedProfiles);
       setProfiles(loadedProfiles);
       if (!selectedProfile) {
         setSelectedProfile(profiles[0].id);
@@ -47,7 +46,6 @@ export default function EdgeProfileDropDown({ onProfileSelected }: Props) {
 
   useEffect(() => {
     if (selectedProfile) {
-      console.log("Selected profile", selectedProfile);
       onProfileSelected?.(selectedProfile);
     }
   }, [selectedProfile]);

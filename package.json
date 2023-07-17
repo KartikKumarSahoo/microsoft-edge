@@ -49,15 +49,6 @@
   ],
   "preferences": [
     {
-      "name": "useDev",
-      "title": "Use Dev",
-      "label": "use Microsoft Edge Dev",
-      "description": "use Microsoft Edge Dev",
-      "required": false,
-      "type": "checkbox",
-      "default": false
-    },
-    {
       "name": "buildChoice",
       "title": "Choose the build you want to use",
       "type": "dropdown",

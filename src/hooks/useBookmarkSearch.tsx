@@ -39,7 +39,6 @@ const getBookmarks = async (profile?: string): Promise<HistoryEntry[]> => {
   await validateAppIsInstalled();
 
   const bookmarksFilePath = getBookmarksFilePath(profile);
-  console.log("Bookmarks file path", bookmarksFilePath);
   if (!existsSync(bookmarksFilePath)) {
     throw new Error(getNoBookmarksMessage());
   }

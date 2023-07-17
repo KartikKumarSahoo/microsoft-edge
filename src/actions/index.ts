@@ -121,13 +121,6 @@ export async function setActiveTab(tab: Tab): Promise<void> {
   `);
 }
 
-// TODO: Search tabs shows incorrect message when Dev build is not installed
-// TODO: Multiple profiles cache creates problem after new browser installation which has one default profile
-// TODO: Allow Beta and Canary builds support
-// TODO: Fix all https://github.com/raycast/extensions/issues?q=is%3Aissue+microsoft+edge+ issues
-// TODO: See if new features can be added to the extension like sidebar, vertical tabs, etc.
-// TODO: Remove console.log statements
-// TODO: Update change log
 export const validateAppIsInstalled = async () => {
   const appInstalled = await runAppleScript(`
     set isInstalled to false
